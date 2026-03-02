@@ -31,7 +31,41 @@ jobs:
 
       - name: Write Google Services placeholder
         run: |
-          echo '{"project_info":{"project_number":"000000000000","firebase_url":"https://placeholder.firebaseio.com","project_id":"placeholder","storage_bucket":"placeholder.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:000000000000:android:0000000000000000","android_client_info":{"package_name":"me.rerere.rikkahub"}},"oauth_client":[],"api_key":[{"current_key":"placeholder"}],"services":{}}],"configuration_version":"1"}' > app/google-services.json
+          cat > app/google-services.json << 'EOF'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "firebase_url": "https://placeholder.firebaseio.com",
+              "project_id": "placeholder",
+              "storage_bucket": "placeholder.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": {
+                    "package_name": "me.rerere.rikkahub"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [{"current_key": "placeholder"}],
+                "services": {}
+              },
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000001",
+                  "android_client_info": {
+                    "package_name": "me.rerere.rikkahub.debug"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [{"current_key": "placeholder"}],
+                "services": {}
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
 
       - name: Gradle Build Debug
         run: |
