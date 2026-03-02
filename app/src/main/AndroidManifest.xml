@@ -10,6 +10,8 @@
   <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+  <uses-permission android:name="android.permission.VIBRATE" />
 
   <uses-feature
     android:name="android.hardware.camera"
@@ -29,7 +31,7 @@
     android:label="@string/app_name"
     android:supportsRtl="true"
     android:theme="@style/Theme.Rikkahub"
-    android:usesCleartextTraffic="true"
+    android:usesClearTextTraffic="true"
     tools:targetApi="33">
     <activity
       android:name=".RouteActivity"
@@ -103,6 +105,10 @@
         android:value="androidx.startup"
         tools:node="remove" />
     </provider>
+
+    <receiver
+        android:name=".service.ScheduledMessageReceiver"
+        android:exported="false" />
   </application>
 
   <queries>
