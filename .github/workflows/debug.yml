@@ -21,14 +21,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Gradle cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-
       - name: Write Google Services placeholder
         run: |
           cat > app/google-services.json << 'EOF'
@@ -67,20 +59,20 @@ jobs:
           }
           EOF
 
-      - name: Install Android SDK 36
+      - name: Install Android SDK 36 and build-tools
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list 2>/dev/null | grep "android-36" || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" || \
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0-rc4" || \
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36"
-          ls -la $ANDROID_HOME/platforms/ || true
-          ls -la $ANDROID_HOME/platforms/android-36/ || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          echo "=== Installed build-tools ==="
+          ls $ANDROID_HOME/build-tools/
+          echo "=== AAPT2 version ==="
+          $ANDROID_HOME/build-tools/36.0.0/aapt2 version || echo "aapt2 not found in 36.0.0"
+          ls $ANDROID_HOME/build-tools/36.0.0/ || true
 
       - name: Gradle Build Debug
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew clean assembleDebug --no-build-cache --no-daemon
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
