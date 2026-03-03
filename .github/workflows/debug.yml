@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Gradle cache
         uses: actions/cache@v4
@@ -67,10 +67,15 @@ jobs:
           }
           EOF
 
-      - name: Install SDK platform 36
+      - name: Install Android SDK 36
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list 2>/dev/null | grep "android-36" || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" || \
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0-rc4" || \
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36"
+          ls -la $ANDROID_HOME/platforms/ || true
+          ls -la $ANDROID_HOME/platforms/android-36/ || true
 
       - name: Gradle Build Debug
         run: |
